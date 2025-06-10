@@ -15,7 +15,7 @@ const AuthForms = () => {
 					<Register />
 				</>
 			)}
-			{user && <button>Sign out</button>}
+			{user && <button onClick={logout}>Sign out</button>}
 		</>
 	);
 };
