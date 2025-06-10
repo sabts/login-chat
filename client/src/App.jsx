@@ -1,13 +1,13 @@
 import { BrowserRouter } from 'react-router-dom';
-import AuthForms from './components/auth-form/AuthForm';
 import AuthProvider from './lib/providers/auth.providers';
+import Router from './lib/routes/routes';
 
 const App = () => {
 	return (
 		<>
 			<BrowserRouter>
 				<AuthProvider>
-					<AuthForms />
+					<Router/> 
 				</AuthProvider>
 			</BrowserRouter>
 		</>

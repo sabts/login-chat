@@ -17,16 +17,12 @@ const AuthForms = () => {
 
 			{user && (
 				<div>
-					<Link to="/chat">Ir al chat</Link>
-					<button onClick={logout}>Cerrar sesión</button>
+					<Link to="/chat"/>
 				</div>
 			)}
 		</>
 	);
 };
 
-const logout = async () => {
-	await signOut(auth);
-};
 
 export default AuthForms;

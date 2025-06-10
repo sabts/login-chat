@@ -4,13 +4,13 @@ import { v4 } from 'uuid';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/config/firebase.config';
 import { AuthContext } from '../../lib/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const socket = io('http://localhost:3000');
 
 const Chat = () => {
 	const { user } = useContext(AuthContext);
-	//const [isConnected, setIsConnected] = useState(false);
-	//const [message, setMessage] = useState('');
+	const navigate = useNavigate(); 
 	const [messages, setMessages] = useState([]);
 
 	useEffect(()=> {
