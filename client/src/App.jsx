@@ -1,5 +1,14 @@
+import AuthForms from './components/auth-form/AuthForm';
+import AuthProvider from './lib/providers/auth.providers';
+
 const App = () => {
-  return <h1>React</h1>;
+	return (
+		<>
+			<AuthProvider>
+				<AuthForms />
+			</AuthProvider>
+		</>
+	);
 };
 
 export default App;

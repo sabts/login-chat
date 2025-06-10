@@ -1,44 +1,30 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/useAuth";
+import { useContext } from 'react';
+import { AuthContext } from '../../lib/context/AuthContext';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
-  const { handleLogin } = useAuth();
-  const [form, setForm] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
+	const {} = useContext(AuthContext);
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>Iniciar Sesión</h2>
-      <input
-        type="email"
-        name="email"
-        placeholder="Correo"
-        value={form.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        value={form.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit">Entrar</button>
-    </form>
-  );
-}
+	return (
+		<form onSubmit={loginUser}>
+			<h2>Iniciar Sesión</h2>
+			<input type='text' name='email' placeholder='Email' />
+			<input type='text' name='password' placeholder='Password' />
+			<button type='submit'>Entrar</button>
+		</form>
+	);
+};
 
-const handleChange = (event, setForm) => {
-    setForm([...event.target.name], [...event.target.value]);
-  };
+const loginUser = async event => {
+	event.preventDefault();
+	const formData = event.target;
+	const email = formData.email.value;
+	const password = formData.password.value;
+	try {
+		await signInWithEmailAndPassword(auth, email, password);
+	} catch (error) {
+		console.log(error);
+	}
+};
 
-  const handleSubmit = async (event, form, handleLogin) => {
-    event.preventDefault();
-    await  handleLogin(form);
-    navigate("/chat");
-  };
-
-export default Login
+export default Login;
