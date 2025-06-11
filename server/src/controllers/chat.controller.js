@@ -1,3 +1,4 @@
+const { time } = require("console");
 const express = require("express");
 const http = require("http");
 
@@ -17,13 +18,15 @@ const io = new Server(server, {
 io.on("connection", socket => {
   console.log("Usuario conectado");
 
-  socket.on("message", data => {
+  socket.on("server-message", data => {
     console.log("Mensaje recibido:", data);
 
     io.emit("server-message", {
       id: v4(),
       user: data.user,
       text: data.message,
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString(),
     });
   });
 

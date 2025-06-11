@@ -12,12 +12,17 @@ const Chat = () => {
 	const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
-		const serverMessage = data => {};
-
-		socket.on('server-message', serverMessage);
-
-		return () => socket.off('message', serverMessage);
-	}, []);
+		const handleServerMessage = (data) => {
+			const updatedMessages = [...messages, data]    
+			setMessages(updatedMessages);      
+		};
+	
+		socket.on('server-message', handleServerMessage);
+	
+		return () => {
+			socket.off('server-message', handleServerMessage);
+		};
+	}, [messages, user]);
 
 	return (
 		<>
@@ -25,11 +30,15 @@ const Chat = () => {
 			<h2>Chat</h2>
 			<div>
 				{messages.map(msg => (
-					<p key={v4()}>{msg.message}</p>
+					<div key={msg.id}>
+					<span>{msg.user}</span>
+					  <p>{msg.message}</p>
+					<span> {msg.time} {msg.date}</span>
+					</div>
 				))}
 			</div>
 			<form
-				onSubmit={event => {
+				onSubmit={(event) => {
 					sendMessage(event, event.target.message.value, user);
 				}}
 			>
@@ -40,13 +49,15 @@ const Chat = () => {
 	);
 };
 
-const sendMessage = (event, messages) => {
+const sendMessage = (event, message, user) => {
 	event.preventDefault();
-	if (messages) {
+	if (message && user) {
 		socket.emit('server-message', {
 			id: v4(),
 			user: user.email,
-			text: user.messages
+			message: message,
+			date: new Date().toLocaleDateString(),
+			time: new Date().toLocaleTimeString()
 		});
 		event.target.reset();
 	}
