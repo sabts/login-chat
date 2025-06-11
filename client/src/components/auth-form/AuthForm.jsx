@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import Login from '../login/Login';
 import Register from '../register/Register';
-import { Link } from 'react-router-dom';
 import { AuthContext } from '../../lib/context/AuthContext';
 
 const AuthForms = () => {
@@ -14,10 +13,10 @@ const AuthForms = () => {
 					<Register />
 				</>
 			)}
-
 			{user && <Link to='/chat'>Go to chat</Link>}
 		</>
 	);
 };
 
+//{user && <Link to='/chat'>Go to chat</Link>} usar el useNavigate
 export default AuthForms;

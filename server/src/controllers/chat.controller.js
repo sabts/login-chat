@@ -5,6 +5,7 @@ const app = express();
 
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const { v4 } = require("uuid");
 
 const io = new Server(server, {
   cors: {
@@ -18,7 +19,12 @@ io.on("connection", socket => {
 
   socket.on("message", data => {
     console.log("Mensaje recibido:", data);
-    io.emit("message", data);
+
+    io.emit("server-message", {
+      id: v4(),
+      user: data.user,
+      text: data.message,
+    });
   });
 
   socket.on("disconnect", () => {

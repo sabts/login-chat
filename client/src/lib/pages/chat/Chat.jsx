@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import { signOut } from 'firebase/auth';
-//import { auth } from '../../lib/config/firebase.config';
 import { AuthContext } from '../../context/AuthContext';
 import { io } from 'socket.io-client';
 
@@ -10,6 +9,14 @@ const socket = io('http://localhost:3000');
 const Chat = () => {
 	const { user } = useContext(AuthContext);
 	const [messages, setMessages] = useState([]);
+
+	useEffect(() => {
+		if (!user) return;
+		socket.emit('user-connected', { email: user.email });
+
+		socket.emit('user-disconnect', { email: user.email });
+		socket.on('server-message', serverMessage);
+	}, [user]);
 
 	useEffect(() => {
 		const serverMessage = data => {};
@@ -21,11 +28,11 @@ const Chat = () => {
 
 	return (
 		<>
-			<h2>Chat</h2>
 			<button onClick={logout}>Sign out</button>
+			<h2>Chat</h2>
 			<div>
 				{messages.map(msg => (
-					<p key={v4()}>{msg.message}</p>
+					<p key={v4()}>{msg}</p>
 				))}
 			</div>
 			<form
@@ -40,10 +47,14 @@ const Chat = () => {
 	);
 };
 
-const sendMessage = (event, message) => {
+const sendMessage = (event, message, user) => {
 	event.preventDefault();
 	if (message) {
-		socket.emit('client message', { message });
+		socket.emit('server-message', {
+			id: v4(),
+			user: user.email,
+			text: message
+		});
 		event.target.reset();
 	}
 };
