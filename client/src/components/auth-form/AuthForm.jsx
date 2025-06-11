@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import Login from '../login/Login';
 import Register from '../register/Register';
 import { AuthContext } from '../../lib/context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const AuthForms = () => {
 	const { user } = useContext(AuthContext);

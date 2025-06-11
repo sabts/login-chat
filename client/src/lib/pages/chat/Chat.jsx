@@ -11,14 +11,6 @@ const Chat = () => {
 	const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
-		if (!user) return;
-		socket.emit('user-connected', { email: user.email });
-
-		socket.emit('user-disconnect', { email: user.email });
-		socket.on('server-message', serverMessage);
-	}, [user]);
-
-	useEffect(() => {
 		const serverMessage = data => {};
 
 		socket.on('server-message', serverMessage);
@@ -32,12 +24,12 @@ const Chat = () => {
 			<h2>Chat</h2>
 			<div>
 				{messages.map(msg => (
-					<p key={v4()}>{msg}</p>
+					<p key={v4()}>{msg.message}</p>
 				))}
 			</div>
 			<form
 				onSubmit={event => {
-					sendMessage(event, event.target.message.value);
+					sendMessage(event, event.target.message.value, user);
 				}}
 			>
 				<input type='text' placeholder='type your message' name='message' />

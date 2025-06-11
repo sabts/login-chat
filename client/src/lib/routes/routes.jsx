@@ -7,14 +7,7 @@ const Router = () => {
 	return (
 		<Routes>
 			<Route path='/' element={<Home />} />
-			<Route
-				path='/chat'
-				element={
-					<ProtectedRoute>
-						<Chat />
-					</ProtectedRoute>
-				}
-			/>
+			<Route path='/chat' element={<Chat />} />
 		</Routes>
 	);
 };
