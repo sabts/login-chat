@@ -40,13 +40,13 @@ const Chat = () => {
 	);
 };
 
-const sendMessage = (event, message, user) => {
+const sendMessage = (event, messages) => {
 	event.preventDefault();
-	if (message) {
+	if (messages) {
 		socket.emit('server-message', {
 			id: v4(),
 			user: user.email,
-			text: message
+			text: user.messages
 		});
 		event.target.reset();
 	}
