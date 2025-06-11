@@ -13,8 +13,8 @@ const Chat = () => {
 
 	useEffect(() => {
 		const handleServerMessage = (data) => {
-			const updatedMessages = [...messages, data]    
-			setMessages(updatedMessages);      
+			setMessages(message=> [...message, data]);
+		//console.log('Mensaje recibido del servidor:', data)   
 		};
 	
 		socket.on('server-message', handleServerMessage);
@@ -32,7 +32,7 @@ const Chat = () => {
 				{messages.map(msg => (
 					<div key={msg.id}>
 					<span>{msg.user}</span>
-					  <p>{msg.message}</p>
+					  <p>{msg.text}</p>
 					<span> {msg.time} {msg.date}</span>
 					</div>
 				))}
