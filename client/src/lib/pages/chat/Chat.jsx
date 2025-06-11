@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 import { signOut } from 'firebase/auth';
 import { AuthContext } from '../../context/AuthContext';
 import { io } from 'socket.io-client';
+import { auth } from '../../config/firebase.config';
 
 const socket = io('http://localhost:3000');
 
