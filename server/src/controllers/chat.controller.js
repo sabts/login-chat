@@ -13,7 +13,7 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", user => {
+io.on("connection", socket => {
   console.log("Usuario conectado");
 
   socket.on("message", data => {
@@ -22,7 +22,7 @@ io.on("connection", user => {
   });
 
   socket.on("disconnect", () => {
-    console.log(`Usuario desconectado: ${user.id} `);
+    console.log(`Usuario desconectado: ${socket.id} `);
   });
 });
 

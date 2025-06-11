@@ -1,56 +1,56 @@
-import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import { useContext, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../lib/config/firebase.config';
-import { AuthContext } from '../../lib/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+//import { auth } from '../../lib/config/firebase.config';
+import { AuthContext } from '../../context/AuthContext';
+import { io } from 'socket.io-client';
 
 const socket = io('http://localhost:3000');
 
 const Chat = () => {
 	const { user } = useContext(AuthContext);
-	const navigate = useNavigate(); 
 	const [messages, setMessages] = useState([]);
 
-	useEffect(()=> {
-	const serverMessage = data => {}
+	useEffect(() => {
+		const serverMessage = data => {};
 
-	socket.on('server-message', serverMessage);
+		socket.on('server-message', serverMessage);
 
-	return () => socket.off('message', serverMessage)
-	}, [])
+		return () => socket.off('message', serverMessage);
+	}, []);
 
 	return (
 		<>
-		<h2>Chat</h2>
-		<button onClick={logout}>Sign out</button>
-		<div>
-			{messages.map(msg => (
-			<p key={v4()}>{msg.message}</p>
-			))}
-		</div>
-		<form onSubmit={event => {
-			sendMessage(event, event.target.message.value)
-		}}>
-			<input type='text' placeholder='type your message' name='message'/>
-			<input type='submit'/>
-		</form>
+			<h2>Chat</h2>
+			<button onClick={logout}>Sign out</button>
+			<div>
+				{messages.map(msg => (
+					<p key={v4()}>{msg.message}</p>
+				))}
+			</div>
+			<form
+				onSubmit={event => {
+					sendMessage(event, event.target.message.value);
+				}}
+			>
+				<input type='text' placeholder='type your message' name='message' />
+				<input type='submit' />
+			</form>
 		</>
 	);
 };
 
 const sendMessage = (event, message) => {
 	event.preventDefault();
-	if(message) {
-		socket.emit('client message', {message});
-		event.target.reset()
+	if (message) {
+		socket.emit('client message', { message });
+		event.target.reset();
 	}
-}
+};
 
 const serverMessage = (data, messages, setMessages) => {
-	setMessages([...messages,data])
-}
+	setMessages([...messages, data]);
+};
 
 const logout = async () => {
 	await signOut(auth);

@@ -15,14 +15,9 @@ const AuthForms = () => {
 				</>
 			)}
 
-			{user && (
-				<div>
-					<Link to="/chat"/>
-				</div>
-			)}
+			{user && <Link to='/chat'>Go to chat</Link>}
 		</>
 	);
 };
-
 
 export default AuthForms;
