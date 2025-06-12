@@ -15,13 +15,24 @@ const StyledTitleDiv = styled.div`
 	justify-content: center;
 	align-items: center;
 	margin-bottom: 16px;
+	background-color: #4361ee;
+	padding: 8px;
+	color: white;
 `;
 
 const StyledButtonsDiv = styled.div`
 	display: flex;
 	width: 100%;
-	gap: 90px;
+	gap: 30px;
 	justify-content: space-around;
+`;
+
+const StyledButtons = styled.button`
+	background-color: transparent;
+	border: 1px solid white;
+	color: white;
+	padding: 12px;
+	border-radius: 16px;
 `;
 
 const StyledForm = styled.form`
@@ -50,13 +61,14 @@ const StyledButton = styled.input`
 	background-color: #3c096c;
 	color: white;
 	border: none;
-	padding: 16px 16px;
+	padding: 16px;
 	border-radius: 16px;
 `;
 export {
 	StyledMainSection,
 	StyledTitleDiv,
 	StyledButtonsDiv,
+	StyledButtons,
 	StyledForm,
 	StyledInputText,
 	StyledButton

@@ -6,7 +6,8 @@ import { io } from 'socket.io-client';
 import { auth } from '../../config/firebase.config';
 import { showChatHistory } from '../../utils/api';
 import Messages from '../../../components/messages/Messages';
-import { StyledButton, StyledButtonsDiv, StyledForm, StyledInputText, StyledMainSection, StyledTitleDiv } from './chat-styles';
+import { StyledButton, StyledButtons, StyledButtonsDiv, StyledForm, StyledInputText, StyledMainSection, StyledTitleDiv } from './chat-styles';
+import { useNavigate } from 'react-router-dom';
 
 const socket = io('http://localhost:3000');
 
@@ -14,6 +15,7 @@ const Chat = () => {
 	const { user } = useContext(AuthContext);
 	const [messages, setMessages] = useState([]);
 	const [showHistory, setShowHistory] = useState(false)
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		const handleServerMessage = (data) => {
@@ -38,8 +40,8 @@ const restoreChats = async () => {
 			<StyledTitleDiv>
 			<h2>Chat</h2>
 			<StyledButtonsDiv>
-			<button onClick={restoreChats}>Restore Chats</button>
-			<button onClick={logout}>Sign out</button>
+			<StyledButtons onClick={restoreChats}>Restore Chats</StyledButtons>
+			<StyledButtons onClick={() => logout(navigate)}>Sign out</StyledButtons>
 			</StyledButtonsDiv>
 			</StyledTitleDiv>
 			{!showHistory && (
@@ -87,8 +89,9 @@ const serverMessage = (data, messages, setMessages) => {
 	setMessages([...messages, data]);
 };
 
-const logout = async () => {
+const logout = async (navigate) => {
 	await signOut(auth);
+	navigate('/');
 };
 
 
