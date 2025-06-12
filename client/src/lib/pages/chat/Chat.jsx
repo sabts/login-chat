@@ -4,17 +4,19 @@ import { signOut } from 'firebase/auth';
 import { AuthContext } from '../../context/AuthContext';
 import { io } from 'socket.io-client';
 import { auth } from '../../config/firebase.config';
+import { showChatHistory } from '../../utils/api';
 
 const socket = io('http://localhost:3000');
 
 const Chat = () => {
 	const { user } = useContext(AuthContext);
 	const [messages, setMessages] = useState([]);
+	const [showHistory, setShowHistory] = useState(false)
 
 	useEffect(() => {
 		const handleServerMessage = (data) => {
 			setMessages(message=> [...message, data]);
-		//console.log('Mensaje recibido del servidor:', data)   
+		console.log('Mensaje recibido del servidor:', data)   
 		};
 	
 		socket.on('server-message', handleServerMessage);
@@ -27,6 +29,7 @@ const Chat = () => {
 	return (
 		<>
 			<button onClick={logout}>Sign out</button>
+			<button onClick={restoreChats}>Restore Chats</button>
 			<h2>Chat</h2>
 			<div>
 				{messages.map(msg => (
@@ -69,5 +72,17 @@ const serverMessage = (data, messages, setMessages) => {
 
 const logout = async () => {
 	await signOut(auth);
+};
+
+const restoreChats = async (showHistory, setMessages, setShowHistory) => {
+	if (!showHistory) {
+		const data = await showChatHistory();
+		setMessages(data);
+		setShowHistory(true);
+	} else {
+		setMessages([]);
+		setShowHistory(false);
+	}
+
 };
 export default Chat;
