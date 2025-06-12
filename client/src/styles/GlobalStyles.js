@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-import './normalize.css';
 export const GlobalStyles = createGlobalStyle`
     *,
     *::after,
@@ -28,6 +27,7 @@ export const GlobalStyles = createGlobalStyle`
         font-family: sans-serif;
         margin: 0;
         background-color: #333;
+       padding-bottom: 6rem;
     }
 
 `;

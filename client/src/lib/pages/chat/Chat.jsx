@@ -5,6 +5,8 @@ import { AuthContext } from '../../context/AuthContext';
 import { io } from 'socket.io-client';
 import { auth } from '../../config/firebase.config';
 import { showChatHistory } from '../../utils/api';
+import Messages from '../../../components/messages/Messages';
+import { StyledButton, StyledButtonsDiv, StyledForm, StyledInputText, StyledMainSection, StyledTitleDiv } from './chat-styles';
 
 const socket = io('http://localhost:3000');
 
@@ -16,7 +18,7 @@ const Chat = () => {
 	useEffect(() => {
 		const handleServerMessage = (data) => {
 			setMessages(message=> [...message, data]);
-	//	console.log('Mensaje recibido del servidor:', data)   
+	//console.log('Mensaje recibido del servidor:', data)   
 		};
 	
 		socket.on('server-message', handleServerMessage);
@@ -29,22 +31,21 @@ const Chat = () => {
 
 const restoreChats = async () => {
 	const data = await showChatHistory();
-	console.log(data)
 	setMessages(data);
 }
 	return (
-		<>
-			<button onClick={logout}>Sign out</button>
-			<button onClick={restoreChats}>Restore Chats</button>
+		<StyledMainSection>
+			<StyledTitleDiv>
 			<h2>Chat</h2>
+			<StyledButtonsDiv>
+			<button onClick={restoreChats}>Restore Chats</button>
+			<button onClick={logout}>Sign out</button>
+			</StyledButtonsDiv>
+			</StyledTitleDiv>
 			{!showHistory && (
         <div>
           {messages.map((msg) => (
-            <div key={msg.id}>
-              <span>{msg.user}</span>
-              <p>{msg.text}</p>
-              <span>{msg.time} {msg.date}</span>
-            </div>
+            <Messages key={msg.id} msg={msg} /> 
           ))}
         </div>
       )}
@@ -52,24 +53,19 @@ const restoreChats = async () => {
       {showHistory && (
         <div>
           {messages.map((msg) => (
-            <div key={msg.id}>
-              <span>{msg.user}</span>
-              <p>{msg.text}</p>
-              <span>{msg.time} {msg.date}</span>
-            </div>
+            <Messages key={msg.id} msg={msg} /> 
           ))}
         </div>
       )}
-
-			<form
+			<StyledForm
 				onSubmit={(event) => {
 					sendMessage(event, event.target.message.value, user);
 				}}
 			>
-				<input type='text' placeholder='type your message' name='message' />
-				<input type='submit' />
-			</form>
-		</>
+				< StyledInputText type='text' placeholder='type your message' name='message' />
+				<StyledButton type='submit' />
+			</StyledForm>
+		</StyledMainSection>
 	);
 };
 
