@@ -16,7 +16,7 @@ const Chat = () => {
 	useEffect(() => {
 		const handleServerMessage = (data) => {
 			setMessages(message=> [...message, data]);
-		console.log('Mensaje recibido del servidor:', data)   
+	//	console.log('Mensaje recibido del servidor:', data)   
 		};
 	
 		socket.on('server-message', handleServerMessage);
@@ -24,22 +24,43 @@ const Chat = () => {
 		return () => {
 			socket.off('server-message', handleServerMessage);
 		};
-	}, [messages, user]);
+	}, [user]);
 
+
+const restoreChats = async () => {
+	const data = await showChatHistory();
+	console.log(data)
+	setMessages(data);
+}
 	return (
 		<>
 			<button onClick={logout}>Sign out</button>
 			<button onClick={restoreChats}>Restore Chats</button>
 			<h2>Chat</h2>
-			<div>
-				{messages.map(msg => (
-					<div key={msg.id}>
-					<span>{msg.user}</span>
-					  <p>{msg.text}</p>
-					<span> {msg.time} {msg.date}</span>
-					</div>
-				))}
-			</div>
+			{!showHistory && (
+        <div>
+          {messages.map((msg) => (
+            <div key={msg.id}>
+              <span>{msg.user}</span>
+              <p>{msg.text}</p>
+              <span>{msg.time} {msg.date}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {showHistory && (
+        <div>
+          {messages.map((msg) => (
+            <div key={msg.id}>
+              <span>{msg.user}</span>
+              <p>{msg.text}</p>
+              <span>{msg.time} {msg.date}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
 			<form
 				onSubmit={(event) => {
 					sendMessage(event, event.target.message.value, user);
@@ -74,15 +95,10 @@ const logout = async () => {
 	await signOut(auth);
 };
 
-const restoreChats = async (showHistory, setMessages, setShowHistory) => {
-	if (!showHistory) {
-		const data = await showChatHistory();
-		setMessages(data);
-		setShowHistory(true);
-	} else {
-		setMessages([]);
-		setShowHistory(false);
-	}
 
-};
+//const restoreChats = async setMessages=> {
+//	const data = await showChatHistory();
+//	console.log(data)
+//	setMessages(data);
+//}
 export default Chat;

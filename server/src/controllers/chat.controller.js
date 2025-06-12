@@ -36,7 +36,7 @@ const loadChatHistory = () => {
   }
 };
 
-app.get("/api/chat", (req, res) => {
+app.get("/chat", (req, res) => {
   try {
     const history = loadChatHistory();
     res.json(history);
