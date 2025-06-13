@@ -1,6 +1,6 @@
 const express = require("express");
 const http = require("http");
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 const app = express();
 
@@ -23,12 +23,12 @@ const chatHistoryPath = path.join(__dirname, "../../data/chat-history.js");
 const saveChatHistory = message => {
   const messages = loadChatHistory();
   messages.push(message);
-  fs.writeFileSync(chatHistoryPath, JSON.stringify(messages));
+  fs.writeFile(chatHistoryPath, JSON.stringify(messages));
 };
 
 const loadChatHistory = () => {
   try {
-    const data = fs.readFileSync(chatHistoryPath);
+    const data = fs.readFile(chatHistoryPath);
     return JSON.parse(data);
   } catch (error) {
     console.error("Error al leer historial:", error);

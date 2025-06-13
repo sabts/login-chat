@@ -15,3 +15,16 @@ export const showChatHistory = async () => {
 		throw new Error(error);
 	}
 };
+
+export const saveChatHistory = async data => {
+	const response = await fetch(URL_BASE + URL_API);
+	try {
+		if (response.ok) {
+			const data = await response.json();
+			return data;
+		}
+	} catch (error) {
+		console.log(error);
+		throw new Error(error);
+	}
+};
