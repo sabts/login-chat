@@ -20,23 +20,25 @@ app.use(cors());
 
 const chatHistoryPath = path.join(__dirname, "../../data/chat-history.js");
 
+const chatsController = {};
+
 const saveChatHistory = message => {
   const messages = loadChatHistory();
   messages.push(message);
   fs.writeFile(chatHistoryPath, JSON.stringify(messages));
 };
 
-const loadChatHistory = async (req, res) => {
+chatsController.loadChatHistory = async (req, res) => {
   try {
     const data = await fs.readFile(chatHistoryPath);
     const jsonData = JSON.parse(data);
     res.send(jsonData);
   } catch (error) {
-    console.error("Error al leer historial:", error);
+    res.status(500).send("Error al leer historial:", error);
   }
 };
 
-app.get("/chat", (req, res) => {
+app.get("/chat", loadChatHistory => {
   try {
     const history = loadChatHistory();
     res.json(history);
