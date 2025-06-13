@@ -26,13 +26,13 @@ const saveChatHistory = message => {
   fs.writeFile(chatHistoryPath, JSON.stringify(messages));
 };
 
-const loadChatHistory = () => {
+const loadChatHistory = async (req, res) => {
   try {
-    const data = fs.readFile(chatHistoryPath);
-    return JSON.parse(data);
+    const data = await fs.readFile(chatHistoryPath);
+    const jsonData = JSON.parse(data);
+    res.send(jsonData);
   } catch (error) {
     console.error("Error al leer historial:", error);
-    return [];
   }
 };
 
