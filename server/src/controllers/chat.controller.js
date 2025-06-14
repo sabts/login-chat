@@ -22,30 +22,30 @@ const chatHistoryPath = path.join(__dirname, "../../data/chat-history.js");
 
 const chatsController = {};
 
-const saveChatHistory = message => {
-  const messages = loadChatHistory();
-  messages.push(message);
-  fs.writeFile(chatHistoryPath, JSON.stringify(messages));
+chatsController.saveChatHistory = async (req, res) => {
+  const newMessage = req.body;
+  try {
+    const data = await fs.readFile(chatHistoryPath, "utf8");
+    const messages = JSON.parse(data || "[]");
+    messages.push(newMessage);
+    await fs.writeFile(chatHistoryPath, JSON.stringify(messages, null, 2));
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error("Error al guardar historial:", error);
+    res.status(500).json({ error: "Error al guardar historial" });
+  }
 };
 
 chatsController.loadChatHistory = async (req, res) => {
   try {
-    const data = await fs.readFile(chatHistoryPath);
-    const jsonData = JSON.parse(data);
-    res.send(jsonData);
+    const data = await fs.readFile(chatHistoryPath, "utf8");
+    const jsonData = JSON.parse(data || "[]");
+    res.status(200).json(jsonData);
   } catch (error) {
-    res.status(500).send("Error al leer historial:", error);
+    console.error("Error al leer historial:", error);
+    res.status(500).json({ error: "Error al leer historial" });
   }
 };
-
-app.get("/chat", loadChatHistory => {
-  try {
-    const history = loadChatHistory();
-    res.json(history);
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener historial" });
-  }
-});
 
 io.on("connection", socket => {
   console.log("Usuario conectado");
@@ -69,4 +69,6 @@ io.on("connection", socket => {
     console.log(`Usuario desconectado: ${socket.id} `);
   });
 });
+
 module.exports = server;
+module.exports = chatsController;
