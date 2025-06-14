@@ -17,7 +17,12 @@ export const showChatHistory = async () => {
 };
 
 export const saveChatHistory = async data => {
-	const response = await fetch(URL_BASE + URL_API);
+	const response = await fetch(URL_BASE + URL_API, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	});
 	try {
 		if (response.ok) {
 			const data = await response.json();

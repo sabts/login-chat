@@ -23,12 +23,11 @@ const chatHistoryPath = path.join(__dirname, "../../data/chat-history.js");
 const chatsController = {};
 
 chatsController.saveChatHistory = async (req, res) => {
-  const newMessage = req.body;
   try {
-    const data = await fs.readFile(chatHistoryPath, "utf8");
-    const messages = JSON.parse(data || "[]");
+    const data = await fs.readFile(chatHistoryPath);
+    const messages = JSON.parse(data);
     messages.push(newMessage);
-    await fs.writeFile(chatHistoryPath, JSON.stringify(messages, null, 2));
+    await fs.writeFile(chatHistoryPath, JSON.stringify(messages));
     res.status(200).json(messages);
   } catch (error) {
     console.error("Error al guardar historial:", error);
@@ -38,8 +37,8 @@ chatsController.saveChatHistory = async (req, res) => {
 
 chatsController.loadChatHistory = async (req, res) => {
   try {
-    const data = await fs.readFile(chatHistoryPath, "utf8");
-    const jsonData = JSON.parse(data || "[]");
+    const data = await fs.readFile(chatHistoryPath);
+    const jsonData = JSON.parse(data);
     res.status(200).json(jsonData);
   } catch (error) {
     console.error("Error al leer historial:", error);
