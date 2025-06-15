@@ -16,17 +16,21 @@ export const showChatHistory = async () => {
 	}
 };
 
-export const saveChatHistory = async data => {
-	const response = await fetch(URL_BASE + URL_API, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	});
+export const saveChatHistory = async chatData => {
 	try {
+		const response = await fetch(URL_BASE + URL_API, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(chatData)
+		});
+
 		if (response.ok) {
-			const data = await response.json();
-			return data;
+			const savedData = await response.json();
+			return savedData;
+		} else {
+			throw new Error('Error al guardar el historial');
 		}
 	} catch (error) {
 		console.log(error);

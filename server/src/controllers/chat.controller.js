@@ -25,6 +25,7 @@ const chatsController = {};
 chatsController.saveChatHistory = async (req, res) => {
   try {
     const data = await fs.readFile(chatHistoryPath);
+    console.log(data);
     const messages = JSON.parse(data);
     messages.push(newMessage);
     await fs.writeFile(chatHistoryPath, JSON.stringify(messages));
@@ -36,6 +37,7 @@ chatsController.saveChatHistory = async (req, res) => {
 };
 
 chatsController.loadChatHistory = async (req, res) => {
+  const newMessage = req.body;
   try {
     const data = await fs.readFile(chatHistoryPath);
     const jsonData = JSON.parse(data);
