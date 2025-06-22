@@ -27,8 +27,7 @@ const Chat = () => {
 
 	useEffect(() => {
 		const handleServerMessage = data => {
-			setMessages(message => [...message, data]);
-			//console.log('Mensaje recibido del servidor:', data)
+			setMessages(prevMessages => [...prevMessages, data]);
 		};
 
 		socket.on('server-message', handleServerMessage);
@@ -51,6 +50,7 @@ const Chat = () => {
 					</StyledButtons>
 				</StyledButtonsDiv>
 			</StyledTitleDiv>
+
 			{!showHistory && (
 				<div>
 					{messages.map(msg => (
@@ -66,9 +66,10 @@ const Chat = () => {
 					))}
 				</div>
 			)}
+
 			<StyledForm
 				onSubmit={event => {
-					sendMessage(event, event.target.message.value, user);
+					sendMessage(event, event.target.message.value, user, setMessages);
 				}}
 			>
 				<StyledInputText
@@ -82,17 +83,29 @@ const Chat = () => {
 	);
 };
 
-const sendMessage = async (event, message, user) => {
+const sendMessage = async (event, message, user, setMessages) => {
 	event.preventDefault();
 	if (message && user) {
-		socket.emit('server-message', {
+		// Crear el objeto del mensaje
+		const newMessage = {
+			id: v4(),  // ID único para cada mensaje
 			user: user.email,
 			message: message,
 			date: new Date().toLocaleDateString(),
 			time: new Date().toLocaleTimeString()
-		});
+		};
+		
+		// Emitir el mensaje al servidor
+		socket.emit('server-message', newMessage);
+
+		// Actualizar el estado local para reflejar el mensaje en la UI
+		setMessages(prevMessages => [...prevMessages, newMessage]);
+
+		// Limpiar el formulario
 		event.target.reset();
-		const data = await saveChatHistory({
+
+		// Guardar el historial del chat (opcional)
+		await saveChatHistory({
 			id: user.uid,
 			user: user.email,
 			message: message,
@@ -102,16 +115,12 @@ const sendMessage = async (event, message, user) => {
 	}
 };
 
-const serverMessage = (data, messages, setMessages) => {
-	setMessages([...messages, data]);
-};
-
-const logout = async navigate => {
+const logout = async (navigate) => {
 	await signOut(auth);
 	navigate('/');
 };
 
-const restoreChats = async setMessages => {
+const restoreChats = async (setMessages) => {
 	const data = await showChatHistory();
 	setMessages(data);
 };

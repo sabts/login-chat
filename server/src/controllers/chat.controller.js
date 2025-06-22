@@ -18,17 +18,30 @@ const io = new Server(server, {
 const cors = require("cors");
 app.use(cors());
 
-const chatHistoryPath = path.join(__dirname, "../../data/chat-history.js");
+const chatHistoryPath = path.join(__dirname, "../../data/chat-history.json");
 
 const chatsController = {};
 
 chatsController.saveChatHistory = async (req, res) => {
   try {
-    const data = await fs.readFile(chatHistoryPath);
-    console.log(data);
-    const messages = JSON.parse(data);
-    messages.push(newMessage);
-    await fs.writeFile(chatHistoryPath, JSON.stringify(messages));
+    console.log(req.body);
+
+    // Leer y parsear el archivo JSON existente
+    let messages = [];
+    try {
+      const data = await fs.readFile(chatHistoryPath);
+      messages = JSON.parse(data);
+    } catch (err) {
+      // Si el archivo no existe o está vacío, seguimos con un array vacío
+      if (err.code !== "ENOENT") throw err;
+    }
+
+    // Añadir el nuevo mensaje
+    messages.push(req.body);
+
+    // Guardar nuevamente el historial actualizado
+    await fs.writeFile(chatHistoryPath, JSON.stringify(messages, null, 2));
+
     res.status(200).json(messages);
   } catch (error) {
     console.error("Error al guardar historial:", error);
